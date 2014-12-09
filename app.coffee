@@ -18,17 +18,17 @@ config = {
     pdf: 'output/Onlinewerk-Pdf.pdf'
     jpg: 'output/Onlinewerk-Screenshot.jpg'
     json: 'output/Onlinewerk-Artikel.json'
-    }
   }
+}
 
 temp = {
   content: ""
   articleURLList: []
-  }
+}
 
 json = {
   articles: []
-  }
+}
 
 # -- Functions --
 getContent = ->
