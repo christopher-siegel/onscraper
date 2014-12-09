@@ -34,9 +34,9 @@ json = {
 getContent = ->
   deferred = Q.defer()
   request config.target, (error, response, body) ->
-      temp.content = body
-      return deferred.resolve body  if not error and response.statusCode is 200
-      if error or response.statusCode isnt 200 then return deferred.reject error
+    temp.content = body
+    return deferred.resolve body  if not error and response.statusCode is 200
+    if error or response.statusCode isnt 200 then return deferred.reject error
   return deferred.promise
 
 getArticles = ->
@@ -57,7 +57,7 @@ parseArticles = ->
         return deferred.reject
       $ = cheerio.load body
 
-      title_scraped = $('div.article > h2 > a').attr("title") 
+      title_scraped = $('div.article > h2 > a').attr("title")
       cat_scraped = $('div.article > small a[rel="category tag"]').text()
       date_scraped = $('div.article > small').text()
       date_pos1 = ((date_scraped.indexOf("am ")) + 3)
