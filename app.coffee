@@ -12,19 +12,23 @@ fs = require 'fs'
 
 
 # -- Config --
-config =
+config = {
   target: 'http://www.onlinewerk.info'
-  output:
+  output: {
     pdf: 'output/Onlinewerk-Pdf.pdf'
     jpg: 'output/Onlinewerk-Screenshot.jpg'
     json: 'output/Onlinewerk-Artikel.json'
+    }
+  }
 
-temp =
+temp = {
   content: ""
   articleURLList: []
+  }
 
-json =
+json = {
   articles: []
+  }
 
 # -- Functions --
 getContent = ->
@@ -63,13 +67,13 @@ parseArticles = ->
       content_scraped = "Lorem ipsum."
 
 
-      article =
+      article = {
         title: title_scraped
         cat: cat_scraped
         date: date_scraped
         author: author_scraped
         content: content_scraped
-
+        }
       json.articles.push article
       if i is temp.articleURLList.length
         console.log "(x) Saved JSON"
