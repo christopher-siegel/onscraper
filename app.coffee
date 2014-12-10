@@ -8,7 +8,9 @@ fs = require 'fs'
 # - Zeichenkodierung im Titel fixen
 # - Content scrapen
 # - richtiger PDF Output (nicht nach print style)
-
+# - In Dateinamen das Datum anhaengen nach Schema "_JJMMDD"
+# - Mit Chronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
+#   - Dabei nur eine neue Datei speichern, wenn sich die Seite verändert hat (z. B. neuer Artikel online)
 
 
 # -- Config --
