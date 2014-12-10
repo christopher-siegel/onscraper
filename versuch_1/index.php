@@ -41,8 +41,6 @@ $dom->loadHTML($html);
 /*** the table by its tag name ***/
 $content = "<page>" . $dom->getElementsByTagName('body')->item(0)->nodeValue . "</page>";
 
-
-
 /**
  * http://html2pdf.fr/en/default
  */
