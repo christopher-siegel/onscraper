@@ -7,7 +7,6 @@ wkhtmltopdf = require("wkhtmltopdf")
 moment = require "moment"
 
 # @ToDo:
-# - Content scrapen
 # - Mit Cronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
 #   - Dabei nur eine neue Datei speichern, wenn sich die Seite verändert hat (z. B. neuer Artikel online)
 
@@ -32,8 +31,14 @@ json = {
   articles: []
 }
 
+_pre = ->
+  deferred = Q.defer()
+
+  deferred.resolve true
+  return deferred.promise
+
 # -- Functions --
-getContent = ->
+getBody = ->
   deferred = Q.defer()
   request {uri: config.target, encoding: "utf8"}, (error, response, body) ->
     temp.content = body
@@ -66,8 +71,9 @@ parseArticles = ->
       date_pos2 = ((date_scraped.indexOf(" in") - 3))
       date_scraped = date_scraped.substr(date_pos1, date_pos2)
       author_scraped = $('div.article > small a[rel="author"]').text()
-      content_scraped = "Lorem ipsum."
-
+      content_scraped = ""
+      $('.article > p').each (x, elem) ->
+        content_scraped += $(this).text()
 
       article = {
         title: title_scraped
@@ -103,7 +109,8 @@ saveMedia = ->
 
 
 # -- Procedure --
-Q.fcall(getContent)
+Q.fcall(_pre)
+.then(getBody)
 .then(getArticles)
 .then(parseArticles)
 .then(saveMedia)
