@@ -7,7 +7,6 @@ wkhtmltopdf = require("wkhtmltopdf")
 moment = require "moment"
 
 # @ToDo:
-# - Zeichenkodierung im Titel fixen
 # - Content scrapen
 # - Mit Cronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
 #   - Dabei nur eine neue Datei speichern, wenn sich die Seite verändert hat (z. B. neuer Artikel online)
@@ -36,7 +35,7 @@ json = {
 # -- Functions --
 getContent = ->
   deferred = Q.defer()
-  request config.target, (error, response, body) ->
+  request {uri: config.target, encoding: "utf8"}, (error, response, body) ->
     temp.content = body
     return deferred.resolve body  if not error and response.statusCode is 200
     if error or response.statusCode isnt 200 then return deferred.reject error
@@ -55,7 +54,7 @@ parseArticles = ->
   deferred = Q.defer()
   i = 1
   for articleURL in temp.articleURLList
-    request articleURL, (error, response, body) ->
+    request {uri: articleURL, encoding: "utf8"}, (error, response, body) ->
       if error or response.statusCode isnt 200
         return deferred.reject
       $ = cheerio.load body
