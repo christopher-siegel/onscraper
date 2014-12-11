@@ -3,23 +3,24 @@ cheerio = require 'cheerio'
 phantom = require 'phantom'
 Q = require 'q'
 fs = require 'fs'
+wkhtmltopdf = require("wkhtmltopdf")
+moment = require "moment"
 
 # @ToDo:
 # - Zeichenkodierung im Titel fixen
 # - Content scrapen
-# - richtiger PDF Output (nicht nach print style)
-# - In Dateinamen das Datum anhaengen nach Schema "_JJMMDD"
-# - Mit Chronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
+# - Mit Cronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
 #   - Dabei nur eine neue Datei speichern, wenn sich die Seite verändert hat (z. B. neuer Artikel online)
 
+current_time = moment().format("YYYY-MM-DD")
 
 # -- Config --
 config = {
   target: 'http://www.onlinewerk.info'
   output: {
-    pdf: 'output/Onlinewerk-Pdf.pdf'
-    jpg: 'output/Onlinewerk-Screenshot.jpg'
-    json: 'output/Onlinewerk-Artikel.json'
+    pdf: "output/Onlinewerk-Pdf_#{current_time}.pdf"
+    jpg: "output/Onlinewerk-Screenshot_#{current_time}.jpg"
+    json: "output/Onlinewerk-Artikel_#{current_time}.json"
   }
 }
 
@@ -87,12 +88,13 @@ parseArticles = ->
 saveMedia = ->
   deferred = Q.defer()
   fs.writeFileSync config.output.json, JSON.stringify(json)
+  wkhtmltopdf(config.target)
+    .pipe(fs.createWriteStream(config.output.pdf));
+  console.log "(x) Saved PDF"
   phantom.create (ph) ->
     ph.createPage (page) ->
       page.viewportSize = { width: 1920, height: 1080}
       page.open config.target, (status) ->
-        page.render config.output.pdf, {media: 'all'}, ->
-          console.log "(x) Saved PDF"
           page.render config.output.jpg, ->
             console.log "(x) Saved JPG"
             ph.exit()
