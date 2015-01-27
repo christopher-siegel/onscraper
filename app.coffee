@@ -5,10 +5,15 @@ Q = require 'q'
 fs = require 'fs'
 wkhtmltopdf = require("wkhtmltopdf")
 moment = require "moment"
+exec = require('child_process').exec
 
-# @ToDo:
-# - Mit Cronjob/o.Ä. diesen Code alle 3 Tage automatisch ausführen lassen
-#   - Dabei nur eine neue Datei speichern, wenn sich die Seite verändert hat (z. B. neuer Artikel online)
+
+
+
+# html oberfläche schreiben
+# watcher dienst?
+# pm2
+
 
 current_time = moment().format("YYYY-MM-DD")
 
@@ -72,8 +77,12 @@ parseArticles = ->
       date_scraped = date_scraped.substr(date_pos1, date_pos2)
       author_scraped = $('div.article > small a[rel="author"]').text()
       content_scraped = ""
+      quotes_scraped = []
       $('.article > p').each (x, elem) ->
         content_scraped += $(this).text()
+
+      $('.article > blockquote').each (x, elem) ->
+        quotes_scraped.push $(this).text()
 
       article = {
         title: title_scraped
@@ -81,6 +90,7 @@ parseArticles = ->
         date: date_scraped
         author: author_scraped
         content: content_scraped
+        quotes: quotes_scraped
         }
       json.articles.push article
       if i is temp.articleURLList.length
@@ -96,14 +106,16 @@ saveMedia = ->
   wkhtmltopdf(config.target)
     .pipe(fs.createWriteStream(config.output.pdf));
   console.log "(x) Saved PDF"
-  phantom.create (ph) ->
-    ph.createPage (page) ->
-      page.viewportSize = { width: 1920, height: 1080}
-      page.open config.target, (status) ->
-          page.render config.output.jpg, ->
-            console.log "(x) Saved JPG"
-            ph.exit()
-            return deferred.resolve true
+  exec "gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=#{config.output.pdf} #{config.output.pdf}", (err, stdout, stderr) ->
+    console.log stdout
+    phantom.create (ph) ->
+      ph.createPage (page) ->
+        page.viewportSize = { width: 1920, height: 1080}
+        page.open config.target, (status) ->
+            page.render config.output.jpg, ->
+              console.log "(x) Saved JPG"
+              ph.exit()
+              return deferred.resolve true
    return deferred.promise
 
 
