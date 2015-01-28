@@ -17,18 +17,21 @@ checkForUpdates = (url) ->
       else
 	      $ = cheerio.load body
 	      title = $('.article > h2 > a').attr('title')
-	      status = fs.readFileSync('./watcher/status.werk')
+	      status = fs.readFileSync(__dirname+'/status.werk')
 	      console.log "Last Checked: #{status}"
 	      console.log "Current: #{title}"
 	      
 	      if "#{status}" isnt "#{title}"
-	      	fs.unlinkSync('./watcher/status.werk')
-	      	fs.writeFileSync('./watcher/status.werk', title)
+	      	fs.unlinkSync(__dirname+'/status.werk')
+	      	fs.writeFileSync(__dirname+'/status.werk', title)
 	      	console.log "[+] New Content! >> #{title} << . Scrape it!"
-	      	exec "coffee ./scraper/app.coffee", (err, stdout, stderr) ->
-	      	  console.log "[YES] Successful.\n--------"
+	      	exec "coffee ./components/scraper/app.coffee", (err, stdout, stderr) ->
 	      	  if err or stderr
+	      	  	console.log err
+	      	  	console.log stderr
 	      	  	console.log "[NO] Failed.\n--------"
+	      	  else
+	      	  	console.log "[YES] Successful.\n--------"
 	      else
 	      	console.log "[-] Nothing new\n--------"
 

@@ -90,7 +90,7 @@ app.controller("ArticleCtrl", function($scope, $http, ngProgress) {
 
 </style>
 
-<div ng-app="scraperApp" class="wrapper col-md-8 col-centered" ng-controller="ArticleCtrl">
+<div ng-app="scraperApp" class="wrapper col-md-8 col-centered" ng-controller="ArticleCtrl" >
     <h1>
         <b style="color: #008E74">Onlinewerk</b> <small>Scraper</small>
     </h1>
@@ -103,12 +103,12 @@ app.controller("ArticleCtrl", function($scope, $http, ngProgress) {
             <a href="#" ng-click="set(1)">JSON</a> | <a href="#" ng-click="set(2)">JPG</a> | <a href="#" ng-click="set(3)">PDF</a>
         </div>
     </div>
-    <div class="time-wrapper" ng-show="{{last_update}}">
+    <div class="time-wrapper" ng-show="last_update">
         <h3>
             Letzte Aktualisierung
         </h3>
-        <small>
-            {{last_update |  date:'dd.MM.yyyy - h:mm'}}
+        <small style="font-size: 11pt;">
+            {{last_update |  date:'dd.MM.yyyy - H:mm'}}
         </small>
         <hr>
     </div>

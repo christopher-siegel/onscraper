@@ -7,6 +7,7 @@ wkhtmltopdf = require("wkhtmltopdf")
 moment = require "moment"
 exec = require('child_process').exec
 path = require('path')
+async = require 'async'
 
 # html oberfläche schreiben
 # watcher dienst?
@@ -61,7 +62,8 @@ getArticles = ->
 parseArticles = ->
   deferred = Q.defer()
   i = 1
-  for articleURL in temp.articleURLList
+  # for articleURL in temp.articleURLList
+  async.eachSeries temp.articleURLList, (articleURL, cb) ->
     request {uri: articleURL, encoding: "utf8"}, (error, response, body) ->
       if error or response.statusCode isnt 200
         return deferred.reject
@@ -96,6 +98,7 @@ parseArticles = ->
         return deferred.resolve true
       else
         i++
+        cb()
   return deferred.promise
 
 saveMedia = ->
