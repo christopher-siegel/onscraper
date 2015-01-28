@@ -21,4 +21,5 @@ If you want to let the watcher forget:
   1. empty components/watcher/status.werk file. 
 
 # Run Wizard
-  1. ./run.sh
+  1. go to root folder of Application /onscraper/.
+  2. ./run.sh

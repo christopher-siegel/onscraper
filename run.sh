@@ -6,10 +6,14 @@ select opt in "${options[@]}"
 do
   case $opt in
     "Scrape immediately")
-      coffee ./components/scraper/app.coffee 
+      cd components/scraper
+      coffee app.coffee 
+      cd ../..
       ;;
     "Watch for Changes")
-      coffee ./components/watcher/app.coffee
+      cd components/watcher
+      coffee app.coffee
+      cd ../..
       ;;
     "Quit")
       break
