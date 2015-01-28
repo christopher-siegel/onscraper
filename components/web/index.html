@@ -1,0 +1,136 @@
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+<script src="vendor/ngProgress/build/ngProgress.min.js"></script>
+<link rel="stylesheet" href="vendor/ngProgress/ngProgress.css">
+<script type="text/javascript">
+   
+var app;
+
+app = void 0;
+
+app = angular.module("scraperApp", ['ngProgress']);
+
+app.controller("ArticleCtrl", function($scope, $http, ngProgress) {
+  var scrape;
+  scrape = void 0;
+  $scope.show = 0;
+  $scope.set = function(value) {
+    console.log("changed")
+    $scope.show = value;
+  };
+  $http.get("http://127.0.0.1:1337/info").then(function(response) {
+    $scope.data = response.data.whole_data.articles;
+    $scope.last_update = response.data.last_time;
+  });
+  $scope.scrape = function() {
+    ngProgress.color('#008E74');
+    ngProgress.start();
+    $http.get("http://127.0.0.1:1337/scrape").then(function(response) {
+        ngProgress.set(100);
+        ngProgress.complete();
+        window.location.reload(false);
+      $http.get("http://127.0.0.1:1337/info").then(function(response) {
+        $scope.$apply(function () {
+            $scope.data = response.data.whole_data.articles;
+            return $scope.last_update = response.data.last_time;
+        });
+      });
+    });
+  };
+});
+
+
+</script>
+<style type="text/css">
+    .col-centered {
+        margin: 0 auto;
+        float: none;
+        text-align: center;
+    }
+    body {
+        background-color: #F9FFFF;
+
+    }
+
+    .content {
+        margin-top: 50px;
+    }
+    .wrapper {
+        margin-top: 6% ;
+    }
+
+    h1 {
+        font-size: 500%;
+        margin-bottom: 70px;
+    }
+    
+    h2 {
+        font-size: 300%;
+    }
+
+    .bigger-text {
+        font-size: 18pt;
+    }
+
+    .btn-scrape {
+        background: #008E74;
+        border: none;
+        width: 200px;
+        height: 50px;
+    }
+
+    .btn-scrape:hover, .btn-scrape:active {
+        background: #00A889;
+        border: none;
+    }
+
+    .space {
+        margin-top: 12px;
+    }
+
+</style>
+
+<div ng-app="scraperApp" class="wrapper col-md-8 col-centered" ng-controller="ArticleCtrl">
+    <h1>
+        <b style="color: #008E74">Onlinewerk</b> <small>Scraper</small>
+    </h1>
+    <div class="download-wrapper">
+        <div class="scrape-action">
+            <button ng-click="scrape()" type="submit" class="btn-scrape btn btn-default btn-success btn-lg">Scrape Content</button>
+            <hr>
+        </div>
+        <div class="result space" style="font-size: 15pt;">
+            <a href="#" ng-click="set(1)">JSON</a> | <a href="#" ng-click="set(2)">JPG</a> | <a href="#" ng-click="set(3)">PDF</a>
+        </div>
+    </div>
+    <div class="time-wrapper" ng-show="{{last_update}}">
+        <h3>
+            Letzte Aktualisierung
+        </h3>
+        <small>
+            {{last_update |  date:'dd.MM.yyyy - h:mm'}}
+        </small>
+        <hr>
+    </div>
+    <div class="article-wrapper content" ng-repeat="article in data" ng-show="show == 1">
+        <small style="font-size: 11pt;">Download JSON: <a href="../../output/data.json" target="_blank">here</a></small>
+        <h2>
+            {{article.title}}
+        </h2>
+        <div class="article space bigger-text">
+           <span style="font-size: 14pt;">von  <i>{{article.author}}</i></span>
+        </div>
+        <div style="font-size: 12pt;" class="article space bigger-text">
+            {{article.content}}
+        </div>
+        <hr>
+    </div>
+    <div class="screenshot-wrapper content" ng-show="show == 2">
+        <img src="../../output/oninewerk.jpg" />
+    </div>
+    <div class="pdf-wrapper content" ng-show="show == 3">
+        <small style="font-size: 11pt;">Download PDF: <a href="../../output/onlinewerk.pdf" target="_blank">here</a></small>
+    </div>
+    
+    </div>
+</div>

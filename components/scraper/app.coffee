@@ -19,9 +19,9 @@ current_time = moment().format("YYYY-MM-DD")
 config = {
   target: 'http://www.onlinewerk.info'
   output: {
-    pdf: "output/onlinewerk.pdf"
-    jpg: "output/oninewerk.jpg"
-    json: "output/data.json"
+    pdf: "/Users/nikolas/www/onscraper/output/onlinewerk.pdf"
+    jpg: "/Users/nikolas/www/onscraper/output/oninewerk.jpg"
+    json: "/Users/nikolas/www/onscraper/output/data.json"
   }
 }
 
@@ -36,7 +36,7 @@ json = {
 
 _pre = ->
   deferred = Q.defer()
-
+  console.log "starting scraping"
   deferred.resolve true
   return deferred.promise
 
@@ -105,7 +105,10 @@ saveMedia = ->
     .pipe(fs.createWriteStream(config.output.pdf));
   console.log "(x) Saved PDF"
   exec "gs -dPDFA -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=#{config.output.pdf} #{config.output.pdf}", (err, stdout, stderr) ->
+  # exec "gs -dPDFA -dBATCH -dNOPAUSE -dNOOUTERSAVE -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sOutputFile=#{config.output.pdf} PDFA_def.ps input.ps", (err, stdout, stderr) ->
     console.log stdout
+    console.log stderr
+    console.log err
     phantom.create (ph) ->
       ph.createPage (page) ->
         page.viewportSize = { width: 1920, height: 1080}
