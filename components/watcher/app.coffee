@@ -25,7 +25,7 @@ checkForUpdates = (url) ->
 	      	fs.unlinkSync(__dirname+'/status.werk')
 	      	fs.writeFileSync(__dirname+'/status.werk', title)
 	      	console.log "[+] New Content! >> #{title} << . Scrape it!"
-	      	exec "coffee ./components/scraper/app.coffee", (err, stdout, stderr) ->
+	      	exec "coffee ../scraper/app.coffee", (err, stdout, stderr) ->
 	      	  if err or stderr
 	      	  	console.log err
 	      	  	console.log stderr

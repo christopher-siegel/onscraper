@@ -1,15 +1,20 @@
 # Install
-  1. install wkhtmltopdf -- http://stackoverflow.com/a/17610797
+  1. install wkhtmltopdf -- Careful: http://stackoverflow.com/a/17610797
   2. npm install -g phantomjs
   3. npm install -g coffee-script
   4. npm install
-  5. create "output" folder
 
 # Start Watcher
-  1. coffee components/watcher/app.coffee
+  1. change directory to watcher folder.
+  2. coffee app.coffee
 
 # Start Scraper directly
-  1. coffee components/scraper/app.coffee
+  1. change directory to scraper folder.
+  2. coffee app.coffee
+
+# Start API (to use Web Interface)
+  1. change directory to web folder.
+  2. coffee app.coffee
 
 # Reset Status
 If you want to let the watcher forget:
