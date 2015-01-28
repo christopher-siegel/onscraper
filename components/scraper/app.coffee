@@ -19,9 +19,9 @@ current_time = moment().format("YYYY-MM-DD")
 config = {
   target: 'http://www.onlinewerk.info'
   output: {
-    pdf: "/Users/nikolas/www/onscraper/output/onlinewerk.pdf"
-    jpg: "/Users/nikolas/www/onscraper/output/oninewerk.jpg"
-    json: "/Users/nikolas/www/onscraper/output/data.json"
+    pdf: "../../output/onlinewerk.pdf"
+    jpg: "../../output/oninewerk.jpg"
+    json: "../../output/data.json"
   }
 }
 

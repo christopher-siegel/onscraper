@@ -4,7 +4,7 @@ exec = require('child_process').exec
 fs= require "fs"
 cors = require('cors')
 
-scraper_dir = "/Users/nikolas/www/onscraper"
+scraper_dir = "../../"
 app.use(cors())
 app.get "/scrape", (req, res) ->
   exec "coffee #{scraper_dir}/components/scraper/app.coffee", (err, stdout, stderr) ->
